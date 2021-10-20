@@ -4,6 +4,11 @@ import pages_plugin
 
 app = Dash(__name__, plugins=[pages_plugin])
 
+
+dash.register_page('another_page', layout='Another page', path='/another-page')
+dash.register_page('and_again', layout='And again!', path='/and-again')
+
+
 app.layout = html.Div([
 	html.H1('App Frame'),
 
@@ -23,10 +28,6 @@ app.layout = html.Div([
 	pages_plugin.page_container
 
 ])
-
-
-dash.register_page('another_page', layout='Another page', path='/another-page')
-dash.register_page('and_again', layout='And again!', path='/and-again')
 
 
 
