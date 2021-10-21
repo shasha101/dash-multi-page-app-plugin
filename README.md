@@ -34,7 +34,7 @@ app = Dash(__name__, plugins=[pages_plugin])
 - Call `dash.register_page(__name__)` to tell `pages_plugin` that this page should be part of the multi-page framework
 
 For example:
-`pages/historical_outlook.py
+`pages/historical_outlook.py`
 ```python
 import dash
 from dash import html
