@@ -1,8 +1,6 @@
 # Multi-Page Dash App Plugin
 
-A plugin to simplify creating multi-page Dash apps.
-
-Will likely be an official part of the `dash` library in the Dash 2.1.
+A plugin to simplify creating multi-page Dash apps. This is a preview of functionality that will of Dash 2.1.
 
 ### Background
 
