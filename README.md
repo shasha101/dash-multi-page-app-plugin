@@ -19,11 +19,11 @@ This plugin will automatically:
 
 ### Usage
 
-**In this project**
+**Option 1 - In this project**
 
 Clone this repo and then run `python app.py`. `pages_plugin.py` is the functionality that will become part of the `dash` library. The `pages/` folder demonstrates examples of how to use `dash.register_page`.
 
-**In your own projects**
+**Option 2 - In your own projects**
 
 1. Copy `pages_plugin.py` into your project folder. In the future, this will be part of `dash` and you won't need to copy this file.
 2. In `app.py`, pass the plugin into `Dash`:
