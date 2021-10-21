@@ -87,7 +87,7 @@ app.layout = html.Div([
 
 **`dash.register_page`**
 
-```
+```python
 def register_page(
     module,
     path=None,
