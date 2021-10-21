@@ -72,11 +72,12 @@ app = Dash(__name__, plugins=[pages_plugin])
 
 app.layout = html.Div([
     # Display the URLs by looping through `dash.page_registry`
+    # In practice, this might be a `ddk.Header` or a `dbc.NavbarSimple`
     html.Div([dcc.Link(page['name'], href=page['path']) for page in dash.page_registry),
     
     html.Hr()
     
-    # Display the page content
+    # Set the container where the page content will be rendered into on page navigation
     pages_plugin.page_container
 ])
 ```
