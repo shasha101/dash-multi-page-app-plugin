@@ -28,7 +28,7 @@ import pages_plugin
 app = Dash(__name__, plugins=[pages_plugin])
 ```
 3. Create a folder called `pages/` and place your app layouts in files within that folder. Each file needs to:
-- Define `layout`. This can be a variable or function that runs a component
+- Define `layout`. This can be a variable or function that returns a component
 - Call `dash.register_page(__name__)` to tell `pages_plugin` that this page should be part of the multi-page framework
 
 For example:
