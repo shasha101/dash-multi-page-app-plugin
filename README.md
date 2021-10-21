@@ -43,7 +43,7 @@ def layout():
     return html.Div('This page is the historical outlook')
 ```
 
-`dash.register_page` will can accept various arguments to define the page like `path` (the URL of the page), `title` (the browser tab's title of the page), and more.
+`dash.register_page` will can accept various arguments to customize aspects about the page like `path` (the URL of the page), `title` (the browser tab's title of the page), and more. See the API reference below for details.
 
 `pages/home.py`
 ```python
