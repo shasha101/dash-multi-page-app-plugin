@@ -8,6 +8,7 @@ import flask
 from os import listdir
 from os.path import isfile, join
 from textwrap import dedent
+from urllib.parse import parse_qs
 
 
 if not os.path.exists('pages'):
@@ -254,10 +255,13 @@ def plug(app):
         @callback(
             Output(_ID_CONTENT, 'children'),
             Input(_ID_LOCATION, 'pathname'),
+            Input(_ID_LOCATION, 'search'),
             prevent_initial_call=True
         )
-        def update(pathname):
+        def update(pathname, search):
             path_id = app.strip_relative_path(pathname)
+            query_parameters = _parse_query_string(search)
+
             layout = None
             for module in dash.page_registry:
                 page = dash.page_registry[module]
@@ -271,16 +275,20 @@ def plug(app):
                     layout = html.H1('404')
 
             if callable(layout):
-                return layout()
+                print('Calling...')
+                print(query_parameters)
+                return layout(**query_parameters)
             else:
                 return layout
 
 
-        # Set validation_layout
-        app.validation_layout = html.Div([
-            page['layout']() if callable(page['layout']) else page['layout']
-            for page in dash.page_registry.values()
-        ] + [app.layout])
+        # Set validation_layout and prefix component IDs and callbacks with module name
+        for module in dash.page_registry:
+        
+            app.validation_layout = html.Div([
+                page['layout']() if callable(page['layout']) else page['layout']
+                for page in dash.page_registry.values()
+            ] + [app.layout])
         
         # Update the page title on page navigation
         path_to_title = {
@@ -379,3 +387,21 @@ def plug(app):
                         redirect,
                         create_redirect_function(page['path'])
                     )
+
+
+def _parse_query_string(search):
+    if search and len(search) > 0 and search[0] == '?':
+        search = search[1:]
+    else:
+        return {}
+    
+    parsed_qs = {}
+    for (k, v) in parse_qs(search).items():
+        first = v[0]  # ignore multiple values
+        try:
+            first = json.loads(first)
+        except:
+            pass
+
+        parsed_qs[k] = first
+    return parsed_qs
