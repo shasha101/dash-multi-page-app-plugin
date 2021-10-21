@@ -33,61 +33,66 @@ def register_page(
     title=None,
     description=None,
     image=None,
+    redirect_from=None,
     layout=None,
     **kwargs
 ):
     """
     Assigns the variables to `dash.page_registry` as an `OrderedDict` 
     (ordered by `order`). 
-    
+
     `dash.page_registry` is used by `pages_plugin` to set up the layouts as 
     a multi-page Dash app. This includes the URL routing callbacks 
     (using `dcc.Location`) and the HTML templates to include title,
     meta description, and the meta description image.
-    
+
     `dash.page_registry` can also be used by Dash developers to create the 
     page navigation links or by template authors.
-    
-    module:
-        The module path where this page's `layout` is defined. Often `__name__`.
-    
-    path:
-        URL Path, e.g. `/` or `/home-page`.
-        If not supplied, will be inferred by module,
-        e.g. `pages.weekly_analytics` to `/weekly-analytics`
 
-    name:
-        The name of the link.
-        If not supplied, will be inferred by module,
-        e.g. `pages.weekly_analytics` to `Weekly analytics`
+    - `module`:
+       The module path where this page's `layout` is defined. Often `__name__`.
 
-    order:
-        The order of the pages in `page_registry`.
-        If not supplied, then the filename is used and the page with path `/` has
-        order `0`
+    - `path`:
+       URL Path, e.g. `/` or `/home-page`.
+       If not supplied, will be inferred from `module`,
+       e.g. `pages.weekly_analytics` to `/weekly-analytics`
 
-    title:
-        The name of the page <title>. That is, what appears in the browser title.
-        If not supplied, will use the supplied `name` or will be inferred by module,
-        e.g. `pages.weekly_analytics` to `Weekly analytics`
+    - `name`:
+       The name of the link.
+       If not supplied, will be inferred from `module`,
+       e.g. `pages.weekly_analytics` to `Weekly analytics`
 
-    description:
-        The <meta type="description"></meta>.
-        If not supplied, then nothing is supplied.
+    - `order`:
+       The order of the pages in `page_registry`.
+       If not supplied, then the filename is used and the page with path `/` has
+       order `0`
+
+    - `title`:
+       The name of the page <title>. That is, what appears in the browser title.
+       If not supplied, will use the supplied `name` or will be inferred by module,
+       e.g. `pages.weekly_analytics` to `Weekly analytics`
+
+    - `description`:
+       The <meta type="description"></meta>.
+       If not supplied, then nothing is supplied.
         
-    image:
-        The meta description image used by social media platforms.
-        If not supplied, then it looks for the following images in `assets/`:
+    - `image`:
+       The meta description image used by social media platforms.
+       If not supplied, then it looks for the following images in `assets/`:
         - A page specific image: `assets/<title>.<extension>` is used, e.g. `assets/weekly_analytics.png`
         - A generic app image at `assets/app.<extension>`
         - A logo at `assets/logo.<extension>`
-    
-    layout:
-        The layout function or component for this page.
-        If not supplied, then looks for `layout` from within the supplied `module`.
 
-    **kwargs:
-        Arbitrary keyword arguments
+    - `redirect_from`:
+       A list of paths that should redirect to this page.
+       For example: `redirect_from=['/v2', '/v3']`
+
+    - `layout`:
+       The layout function or component for this page.
+       If not supplied, then looks for `layout` from within the supplied `module`.
+
+    - `**kwargs`:
+       Arbitrary keyword arguments that can be stored
 
     ***
 
@@ -162,6 +167,9 @@ def register_page(
     page.update(
         image=(image if image is not None else _infer_image(module)),
         supplied_image=image
+    )
+    page.update(
+        redirect_from=redirect_from
     )
     
     dash.page_registry[module] = page
@@ -299,7 +307,6 @@ def plug(app):
         )
         
         # Set index HTML for the meta description and page title on page load
-        # TODO - Will this work with dash-embedded?
         def interpolate_index(**kwargs):
             
             image = path_to_image.get(flask.request.path, '')
@@ -355,3 +362,20 @@ def plug(app):
         )
         
         app.interpolate_index = interpolate_index
+        
+        def create_redirect_function(redirect_to):
+            def redirect():
+                return flask.redirect(redirect_to, code=301)
+            return redirect
+        
+        # Set redirects
+        for module in dash.page_registry:
+            page = dash.page_registry[module]
+            if page['redirect_from'] and len(page['redirect_from']):
+                for redirect in page['redirect_from']:
+                    # TODO - Use pathname prefix
+                    app.server.add_url_rule(
+                        redirect,
+                        redirect,
+                        create_redirect_function(page['path'])
+                    )

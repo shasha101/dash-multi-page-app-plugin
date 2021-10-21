@@ -2,6 +2,8 @@
 
 A plugin to simplify creating multi-page Dash apps. This is a preview of functionality that will of Dash 2.1.
 
+**[See the community announcement for details and discussion](https://community.plotly.com/t/introducing-dash-pages-dash-2-1-feature-preview/57775/2)**
+
 ### Background
 
 The goal of this plugin is to remove as much boilerplate as possible when creating multi-page Dash apps.
@@ -151,6 +153,10 @@ page navigation links or by template authors.
     - A page specific image: `assets/<title>.<extension>` is used, e.g. `assets/weekly_analytics.png`
     - A generic app image at `assets/app.<extension>`
     - A logo at `assets/logo.<extension>`
+
+- `redirect_from`:
+   A list of paths that should redirect to this page
+   For example: `redirect_from=['/v2', '/v3']`
 
 - `layout`:
    The layout function or component for this page.

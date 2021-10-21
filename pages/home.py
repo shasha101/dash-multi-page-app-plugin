@@ -8,6 +8,7 @@ dash.register_page(
 	name='Analytic Apps',
 	description='Welcome to my app',
 	order=0,
+	redirect_from=['/old-home-page', '/v2'],
 	extra_template_stuff='yup'
 )
 
