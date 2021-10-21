@@ -62,7 +62,8 @@ def layout():
 
 4. Modify `app.layout` to display the URLs for page navigation and include the container that displays the page's content.
 - `dash.page_registry`: The page URLs can be found in `dash.page_registry`. This is an `OrderedDict` with keys being the page's module name (e.g. `pages.historical_outlook`) and values being a dictionary containing keys `path`, `name`, `order`, `title`, `description`, `image`, and `layout`. This `page_registry` is populated from calling `dash.register_page` within `pages/`.
-- `pages_plugin.page_container`: This component defines where the page's content should live within the app layout.
+- `pages_plugin.page_container`: This component defines where the page's content will render on page navigation.
+- 
 `app.py`
 
 ```python
