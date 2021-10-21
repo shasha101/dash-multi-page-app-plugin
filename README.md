@@ -165,7 +165,7 @@ register_page(
 )
 ```
 Then this will appear in `page_registry`:
-```
+```python
 OrderedDict([
     (
         'pages.historical_outlook', 
